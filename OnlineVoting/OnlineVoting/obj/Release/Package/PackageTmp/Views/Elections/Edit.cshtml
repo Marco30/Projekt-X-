@@ -1,0 +1,99 @@
+﻿@model OnlineVoting.Models.ElectionCreateEditView
+@{
+    ViewBag.Title = "Edit";
+}
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Voting</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.ElectionId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.StateId, "StateId", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("StateId", String.Empty)
+                @Html.ValidationMessageFor(model => model.StateId)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remarks, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Remarks)
+                @Html.ValidationMessageFor(model => model.Remarks)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateStart, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateStart)
+                @Html.ValidationMessageFor(model => model.DateStart)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TimeStart, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TimeStart)
+                @Html.ValidationMessageFor(model => model.TimeStart)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DateEnd, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DateEnd)
+                @Html.ValidationMessageFor(model => model.DateEnd)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TimeEnd, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TimeEnd)
+                @Html.ValidationMessageFor(model => model.TimeEnd)
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.IsForAllUsers, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsForAllUsers)
+                @Html.ValidationMessageFor(model => model.IsForAllUsers)
+            </div>
+        </div> *@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsEnabledBlankVote, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsEnabledBlankVote)
+                @Html.ValidationMessageFor(model => model.IsEnabledBlankVote)
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.CandidateWinId)
+        @Html.HiddenFor(model => model.QuantityVotes)
+        @Html.HiddenFor(model => model.QuantityBlankVotes)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

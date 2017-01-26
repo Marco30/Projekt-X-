@@ -1,0 +1,144 @@
+﻿@model OnlineVoting.Models.ElectionVotingView
+@{
+    ViewBag.Title = "Vote";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h2>Choose your candidate and vote</h2>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.State.Descripcion)
+                </dt>
+                <dd>
+                    @ViewBag.StateDescripcion
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Remarks)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Remarks)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateTimeStart)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.DateTimeStart)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.DateTimeEnd)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.DateTimeEnd)
+                </dd>
+                
+                @*<dt>
+                    @Html.DisplayNameFor(model => model.IsForAllUsers)
+                 </dt>
+
+                <dd>
+                     @Html.DisplayFor(model => model.IsForAllUsers)
+                 </dd> *@
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsEnableBlankVote)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.IsEnableBlankVote)
+                </dd>
+            </dl>
+            @Html.ActionLink("Back to Pending Elections", "ElectionsForUsers", new { }, new { @class = "btn btn-default" })
+        </div>
+    </div>
+    <!--Master detail 2-->
+    @*groups*@
+    @*candidates*@
+    <div class="col-md-6">
+
+        <h4>Blank Vot</h4>
+
+@if (Model.MyCandidate.Count > 0 & true == ViewBag.IsEnableBlankVote)
+{
+        @Html.ActionLink(
+                                 "Vote",
+                                 "VoteForBlankCandidate",
+                                 new
+                                 {
+                                     candidateId = Model.MyCandidate[0].CandidateId,
+                                     ElectionId = Model.ElectionId
+                                 },
+
+                              new
+                              {
+                                  @class = "btn btn-info",
+                                  onclick = "return confirm('Are you sure you want to Vote Blank?');"
+                              })
+}
+else if (Model.MyCandidate.Count == 0)
+{
+    <h5>No candidates added yet</h5>
+}
+else
+{
+    <h5>blank vote is not allowed</h5>
+}
+        <h4>Candidates</h4>
+        @if (Model.MyCandidate.Count > 0)
+        {
+            <table class="table" id="UserVoting">
+                <tr id="hide">
+                    <th>
+                        @Html.DisplayNameFor(model => Model.MyCandidate[0].User.FullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => Model.MyCandidate[0].User.Photo)
+                    </th>
+                    <th></th>
+                </tr>
+                @for (int i = 0; i < Model.MyCandidate.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.MyCandidate[i].User.FullName)
+                        </td>
+                        <!--view photo-->
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.MyCandidate[i].User.Photo))
+                            {
+                                <img src="@Url.Content(Model.MyCandidate[i].User.Photo)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink(
+                                "Vote",
+                                "VoteForCandidate",
+                                new
+                                {
+                                    candidateId = Model.MyCandidate[i].CandidateId,
+                                    ElectionId = Model.ElectionId
+                                },
+
+                             new
+                             {
+                                 @class = "btn btn-info",
+                                 onclick = "return confirm('Are you sure to vote for this candidate?');"
+                             })
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <h5>No candidates added yet</h5>
+        }
+    </div>
+</div>

@@ -1,0 +1,146 @@
+﻿@model OnlineVoting.Models.ElectionCreateEditView
+@{
+    ViewBag.Title = "_Edit";
+}
+
+
+
+@using (Ajax.BeginForm("_EditElectionInfo", "Elections", Model, new AjaxOptions
+{
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    OnSuccess = "LineEdit"
+})) //skickar Id till post funktionen i controller
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.ElectionId)
+
+
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.StateId, "StateId", new { @class = "IsEditOnlineLabel" })
+
+                @Html.DropDownList("StateId", String.Empty)
+                @Html.ValidationMessageFor(model => model.StateId)
+                <hr />
+            </div>
+
+            <div class="col-md-1">
+            </div>
+
+            <div class="col-md-2">
+                @Html.LabelFor(model => model.Description, new { @class = "IsEditOnlineLabel" })
+
+                @Html.EditorFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+                <hr />
+                @Html.LabelFor(model => model.Remarks, new { @class = "IsEditOnlineLabel" })
+
+                @Html.EditorFor(model => model.Remarks)
+                @Html.ValidationMessageFor(model => model.Remarks)
+
+
+
+            </div>
+            <div class="col-md-1">
+                <div class="form-group1">
+                    @Html.LabelFor(model => model.DateStart, new { @class = "IsEditOnlineLabel" })
+
+                    @Html.EditorFor(model => model.DateStart)
+                    @Html.ValidationMessageFor(model => model.DateStart)
+                    <hr />
+                    @Html.LabelFor(model => model.TimeStart, new { @class = "IsEditOnlineLabel" })
+
+                    @Html.EditorFor(model => model.TimeStart)
+                    @Html.ValidationMessageFor(model => model.TimeStart)
+                </div>
+            </div>
+
+            <div class="col-md-1">
+            </div>
+            @* <td>
+                                    <div class="form-group">
+
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.IsForAllUsers)
+                        @Html.ValidationMessageFor(model => model.IsForAllUsers)
+                    </div>
+                </div>
+                                </td> *@
+            <div class="col-md-1">
+                <div class="form-group1">
+                    @Html.LabelFor(model => model.DateEnd, new { @class = "IsEditOnlineLabel" })
+
+                    @Html.EditorFor(model => model.DateEnd)
+                    @Html.ValidationMessageFor(model => model.DateEnd)
+                    <hr />
+                    @Html.LabelFor(model => model.TimeEnd, new { @class = "IsEditOnlineLabel" })
+
+                    @Html.EditorFor(model => model.TimeEnd)
+                    @Html.ValidationMessageFor(model => model.TimeEnd)
+                </div>
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-1">
+                <div class="form-group1">
+                    @Html.LabelFor(model => model.IsEnabledBlankVote, new { @class = "IsEditOnlineLabel" })
+                    @*@Html.Label("Blank Vote", new { @class = "IsEditOnlineLabel" })*@
+
+                </div>
+                @Html.EditorFor(model => model.IsEnabledBlankVote)
+                @Html.ValidationMessageFor(model => model.IsEnabledBlankVote)
+                <hr />
+
+            </div>
+            <div class="col-md-1">
+            </div>
+
+            <div class="col-md-1">
+
+                @Html.HiddenFor(model => model.CandidateWinId)
+                @Html.HiddenFor(model => model.QuantityVotes)
+                @Html.HiddenFor(model => model.QuantityBlankVotes)
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </div>
+                </div>
+
+            </div>
+
+
+
+}
+
+@section Scripts {
+
+
+    <script type="text/javascript">
+
+        //--------------------------------------------
+        var onSuccessEdit = function doIt(result) {
+            var fileId = $(result).find('#ElectionId').val();
+            $('#M-' + fileId.toString()).html(result);
+            //$('#M-' + fileId.toString()).css({ "width": "auto" });
+            //$('#M-' + fileId.toString() + ' td').css({ 	"border": "1px solid #CC3","border-spacing": "0","height": "100px", "width": "100px", "margin": "0", "padding": "0"});
+            //$('#M-' + fileId.toString() + ' .form-group1').css({ "margin": "5px -38px 0px 0px", "padding-left": "9px" });
+
+
+        };
+
+        //--------------------------------------------
+
+        //$('#TimeEnd').timepicker({ 'timeFormat': 'H:i' });
+        $("input[type='time']").timepicker({ 'timeFormat': 'H:i' });// funktion som aktiverar TimePicker, den körs på alla input HTML tagar med typ (Time)
+
+        $("input[type='date']").datepicker({
+            dateFormat: "yy-mm-dd",
+        }); // funktion som aktiverar DatePicker, den körs på alla input HTML tagar med typ (Date)
+
+
+    </script>
+}

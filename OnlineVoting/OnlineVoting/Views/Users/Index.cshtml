@@ -1,0 +1,122 @@
+﻿@model IEnumerable<OnlineVoting.Models.UserIndexView>
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Users</h2>
+
+
+@using (Ajax.BeginForm("_SearchUser", "Users", null, new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    UpdateTargetId = "resultTarget"
+})) //skickar Id till post funktionen i controller
+{
+
+    @Html.TextBox("SearchText", null, new { id = "SearchText" })
+    <input type="submit" value="Search" class="btn btn-info" />
+
+}
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-info" })
+
+    @Html.ActionLink("Create XML", "XML", new { }, new { @class = "btn btn-default" })
+
+</p>
+<p>
+    <div id="Success1">
+        @ViewBag.Message
+    </div>
+</p>
+
+    <div id="resultTarget">
+
+        <table class="table" id="Userlist">
+            <tr id="hide">
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Adress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Photo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsAdmin)
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Adress)
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Photo))
+                {
+                            <img src="@Url.Content(item.Photo)" alt="Image" style="width:100px; height:100px; max-width:100%; height:auto;" />
+
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsAdmin)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.UserId }, new { @class = "btn btn-info" })
+                        @Html.ActionLink("Details", "Details", new { id = item.UserId }, new { @class = "btn btn-info" })
+                        @Html.ActionLink("On/Off Admin", "OnOffAdmin", new { id = item.UserId }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.UserId }, new { @class = "btn btn-default" })
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+
+        <script type="text/javascript">
+
+            var onSuccess = function doIt(result) {
+                if (result.ok) {
+                    window.location.href = result.url;
+                }
+            };
+
+            $(function () {
+
+                $("#SearchText").autocomplete({
+                    source: '@Url.Action("GetNameSearch")'
+                });
+
+            });
+
+
+        </script>
+
+    }

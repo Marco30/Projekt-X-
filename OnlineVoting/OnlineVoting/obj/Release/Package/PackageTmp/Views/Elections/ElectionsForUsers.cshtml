@@ -1,0 +1,87 @@
+﻿@model IEnumerable<OnlineVoting.Models.Election>
+@{
+    ViewBag.Title = "ElectionsForUsers";
+}
+<h2>Pending Elections</h2>
+<p>
+    <div id="Success1">
+        @ViewBag.Message
+    </div>
+</p>
+
+@if (ViewBag.empty)
+{
+    <div id="Error2">There are no election right now</div>
+}
+
+
+<table class="table" id="UserElections">
+    <tr id="hide">
+        <th>
+            @Html.DisplayNameFor(model => model.State.Descripcion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Remarks)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateTimeStart)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateTimeEnd)
+        </th>
+
+        @*<th>
+                @Html.DisplayNameFor(model => model.IsForAllUsers)
+            </th> *@
+
+        <th>
+            @Html.DisplayNameFor(model => model.IsEnableBlankVote)
+        </th>
+
+        <th></th>
+    </tr>
+
+  
+
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTimeStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTimeEnd)
+                </td>
+
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsForAllUsers)
+                    </td> *@
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsEnableBlankVote)
+                </td>
+
+                <td>
+                    @Html.ActionLink("Vote", "Vote", new { ElectionId = item.ElectionId }, new { @class = "btn btn-info" })
+
+                </td>
+            </tr>
+
+        }
+
+</table>
+
+

@@ -1,0 +1,87 @@
+﻿@model OnlineVoting.Models.UserSettingsView
+@{
+    ViewBag.Title = "Edit";
+}
+<div id="FixEditFocus">
+    <h2>Edit</h2>
+</div>
+
+
+@using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>User</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.UserName)
+
+        <div class="row">
+
+            <div class="col-md-7">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FirstName)
+                        @Html.ValidationMessageFor(model => model.FirstName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.LastName)
+                        @Html.ValidationMessageFor(model => model.LastName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Phone)
+                        @Html.ValidationMessageFor(model => model.Phone)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Adress, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Adress)
+                        @Html.ValidationMessageFor(model => model.Adress)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NewPhoto, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <span class="btn btn-default btn-file">
+                            @Html.TextBoxFor(model => model.NewPhoto, new { type = "file" })
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-info" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-5">
+                @if (!string.IsNullOrEmpty(Model.Photo))
+                {
+                    <img src="@Url.Content(Model.Photo)" style="width:300px;height:300px;max-width: 100%; height: auto;" />
+                }
+            </div>
+
+        </div>
+
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

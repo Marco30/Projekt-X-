@@ -1,0 +1,242 @@
+﻿@{
+
+    ViewBag.Title = "Home Page";
+}
+
+@if (!this.User.IsInRole("Admin") && !this.User.IsInRole("User"))
+{
+
+ <div class="jumbotron">
+        <div class="rowoval">
+
+
+        </div>
+
+        <div class="rowUserIndex">
+
+            <div class="col-md-48">
+                <h1>OnlineVoting</h1>
+
+                <p class="lead">Log in to use the system if is it your first time you have to register to use the system</p>
+
+            </div>
+
+            <div class="col-md-45">
+
+
+                @*@Html.ActionLink("My Votings", "MyVotings", "Votings", new { }, new { @class = "btn btn-warning" })
+                    <img src="~/Content/Images/Voting.png" style="width:200px;height:200px;max-width: 100%; height: auto;" />*@
+                <dive id="hover">
+                    <a href='@Url.Action("Register", "Account")' class="btn btn-info" title="My Votings">
+
+                        <span>Register</span>
+
+                        <img src='@Url.Content("~/Content/Images/register3.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                    </a>
+                </dive>
+            </div>
+
+            <div class="col-md-45">
+
+
+                @*@Html.ActionLink("My Votings", "MyVotings", "Votings", new { }, new { @class = "btn btn-warning" })
+                    <img src="~/Content/Images/Voting.png" style="width:200px;height:200px;max-width: 100%; height: auto;" />*@
+                <dive id="hover">
+                    <a href='@Url.Action("Login", "Account")' class="btn btn-info" title="My Votings">
+
+                        <span>Login </span>
+
+                        <img src='@Url.Content("~/Content/Images/key3.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                    </a>
+                </dive>
+            </div>
+
+            @*<div class="col-md-7">
+                    <img src="~/Content/Images/Elections.jpg" style="width:500px;height:500px;max-width: 100%; height: auto;" />
+                </div>
+            *@
+        </div>
+    </div>
+}
+
+@if (this.User.IsInRole("User"))
+{
+    <p>
+        <div id="Success1">
+            @ViewBag.Message
+        </div>
+    </p>
+
+    <div class="rowoval">
+
+        @*<div class="col-md-4">
+
+                <div class="tile-new">
+
+                    <div class="tile-hover" style="background-color:rgba(37, 45, 207, 0.9);">
+
+                        <h4>
+                            Marketing
+                        </h4>
+                        <p>Increasing Users for a Revolutionary Collaboration Tool Recently Acquired for $750MM</p>
+                        <a href="/Content/Images/Voting.png" class="cta hollow">Learn More</a>
+
+                    </div>
+                </div>
+
+            </div>*@
+
+
+    </div>
+
+    <div class="rowUserIndex">
+
+
+        <div class="col-md-88">
+
+            <p>
+                Change your personal data and password.
+            </p>
+
+            @* @Html.ActionLink("My Settings", "MySettings", "Users", new { }, new { @class = "btn btn-primary" })
+                <img src="~/Content/Images/Settings.png" style="width:200px;height:200px;max-width: 100%; height: auto;" /> *@
+            <dive id="hover">
+                <a href='@Url.Action("MySettings", "Users")' class="btn btn-info" title="My Settings">
+
+                    <span>My Settings</span>
+
+                    <img src='@Url.Content("~/Content/Images/Settings.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                </a>
+            </dive>
+
+
+
+
+        </div>
+
+        <div class="col-md-88">
+
+            <p>
+                Vote for the different candidates.
+            </p>
+
+            @*@Html.ActionLink("My Votings", "MyVotings", "Votings", new { }, new { @class = "btn btn-warning" })
+                <img src="~/Content/Images/Voting.png" style="width:200px;height:200px;max-width: 100%; height: auto;" />*@
+            <dive id="hover">
+                <a href='@Url.Action("ElectionsForUsers", "Elections")' class="btn btn-info" title="My Votings">
+
+                    <span>Voting</span>
+
+                    <img src='@Url.Content("~/Content/Images/Vote1.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                </a>
+            </dive>
+        </div>
+
+
+
+        <div class="col-md-88">
+
+            <p>See the votation results.</p>
+
+            @*@Html.ActionLink("Results", "Results", "Votings", new { }, new { @class = "btn btn-info" })
+                <img src="~/Content/Images/Result.jpg" style="width:200px;height:200px;max-width: 100%; height: auto;" />*@
+            <dive id="hover">
+                <a href='@Url.Action("Results", "Elections")' class="btn btn-info" title="Results">
+
+                    <span> Results </span>
+
+                    <img src='@Url.Content("~/Content/Images/Result2.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                </a>
+            </dive>
+        </div>
+    </div>
+
+}
+
+@if (this.User.IsInRole("Admin"))
+{
+    <div class="rowoval">
+
+        @*<div class="col-md-4">
+
+                <div class="tile-new">
+
+                    <div class="tile-hover" style="background-color:rgba(37, 45, 207, 0.9);">
+
+                        <h4>
+                            Marketing
+                        </h4>
+                        <p>Increasing Users for a Revolutionary Collaboration Tool Recently Acquired for $750MM</p>
+                        <a href="/Content/Images/Voting.png" class="cta hollow">Learn More</a>
+
+                    </div>
+                </div>
+
+            </div>*@
+
+
+    </div>
+
+    <div class="rowUserIndex">
+
+
+        <div class="col-md-88">
+
+            <p>
+                List of all users and their information.
+            </p>
+
+            @* @Html.ActionLink("My Settings", "MySettings", "Users", new { }, new { @class = "btn btn-primary" })
+                <img src="~/Content/Images/Settings.png" style="width:200px;height:200px;max-width: 100%; height: auto;" /> *@
+            <dive id="hover">
+                <a href='@Url.Action("Index", "Users")' class="btn btn-info" title="All Users">
+
+                    <span>User List</span>
+
+                    <img src='@Url.Content("~/Content/Images/user4.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                </a>
+            </dive>
+
+
+
+
+        </div>
+
+        <div class="col-md-88">
+
+            <p>
+                create a new election and list of all elections
+            </p>
+
+            @*@Html.ActionLink("My Votings", "MyVotings", "Votings", new { }, new { @class = "btn btn-warning" })
+                <img src="~/Content/Images/Voting.png" style="width:200px;height:200px;max-width: 100%; height: auto;" />*@
+            <dive id="hover">
+                <a href='@Url.Action("Index", "Elections")' class="btn btn-info" title="My Votings">
+
+                    <span>Elections</span>
+
+                    <img src='@Url.Content("~/Content/Images/book1.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                </a>
+            </dive>
+        </div>
+
+
+
+        <div class="col-md-88">
+
+            <p>List of States</p>
+
+            @*@Html.ActionLink("Results", "Results", "Votings", new { }, new { @class = "btn btn-info" })
+                <img src="~/Content/Images/Result.jpg" style="width:200px;height:200px;max-width: 100%; height: auto;" />*@
+            <dive id="hover">
+                <a href='@Url.Action("Index", "States")' class="btn btn-info" title="Results">
+
+                    <span> States </span>
+
+                    <img src='@Url.Content("~/Content/Images/state.png")' style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                </a>
+            </dive>
+        </div>
+    </div>
+
+}
