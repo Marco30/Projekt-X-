@@ -73,7 +73,7 @@
             @Html.DisplayFor(model => model.CandidateWinId)
         </dd>
     </dl>
-    @using (Html.BeginForm())
+    @*@using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
@@ -81,5 +81,9 @@
             <input type="submit" value="Delete" class="btn btn-default" /> |
             @Html.ActionLink("Back to List", "Index")
         </div>
-    }
+    }*@
+
+    @Html.ActionLink("Delete", "ElectionDeleteEnabled", new { id = Model.ElectionId }, new { @class = "btn btn-default", onclick = "return confirm('Are you sure you want to delete this Election?')" })
+
+
 </div>

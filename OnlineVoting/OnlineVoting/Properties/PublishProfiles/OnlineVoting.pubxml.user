@@ -91,7 +91,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/03/2014 21:33:56</publishTime>
     </File>
     <File Include="bin/OnlineVoting.dll">
-      <publishTime>01/22/2017 19:54:01</publishTime>
+      <publishTime>02/06/2017 18:16:34</publishTime>
     </File>
     <File Include="bin/Owin.dll">
       <publishTime>11/27/2012 13:00:52</publishTime>
@@ -163,7 +163,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/06/2016 20:47:24</publishTime>
     </File>
     <File Include="Content/FormStyle.css">
-      <publishTime>01/21/2017 14:25:06</publishTime>
+      <publishTime>02/05/2017 17:36:41</publishTime>
     </File>
     <File Include="Content/Images/book1.png">
       <publishTime>12/29/2016 14:52:24</publishTime>
@@ -289,7 +289,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/06/2016 20:47:24</publishTime>
     </File>
     <File Include="Scripts/Focus,TimeAndDate.js">
-      <publishTime>01/21/2017 14:05:01</publishTime>
+      <publishTime>02/05/2017 20:23:15</publishTime>
     </File>
     <File Include="Scripts/jquery-1.10.2.js">
       <publishTime>12/06/2016 20:47:26</publishTime>
@@ -336,6 +336,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Scripts/_references.js">
       <publishTime>12/18/2016 02:19:55</publishTime>
     </File>
+    <File Include="Views/Account/Confirm.cshtml">
+      <publishTime>01/24/2017 21:21:34</publishTime>
+    </File>
     <File Include="Views/Account/ExternalLoginConfirmation.cshtml">
       <publishTime>12/07/2016 14:10:16</publishTime>
     </File>
@@ -343,10 +346,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/07/2016 14:10:16</publishTime>
     </File>
     <File Include="Views/Account/Login.cshtml">
-      <publishTime>01/11/2017 14:16:14</publishTime>
+      <publishTime>01/28/2017 01:45:35</publishTime>
     </File>
     <File Include="Views/Account/Manage.cshtml">
       <publishTime>12/07/2016 14:10:16</publishTime>
+    </File>
+    <File Include="Views/Account/RecoverPassword.cshtml">
+      <publishTime>01/28/2017 01:42:58</publishTime>
     </File>
     <File Include="Views/Account/Register.cshtml">
       <publishTime>01/20/2017 16:52:17</publishTime>
@@ -376,10 +382,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/22/2017 18:23:44</publishTime>
     </File>
     <File Include="Views/Elections/ElectionsForUsers.cshtml">
-      <publishTime>01/22/2017 18:51:44</publishTime>
+      <publishTime>02/02/2017 23:41:58</publishTime>
     </File>
     <File Include="Views/Elections/Index.cshtml">
-      <publishTime>01/22/2017 19:22:55</publishTime>
+      <publishTime>02/05/2017 20:24:01</publishTime>
     </File>
     <File Include="Views/Elections/Results.cshtml">
       <publishTime>01/22/2017 18:50:37</publishTime>
@@ -388,16 +394,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2017 16:28:15</publishTime>
     </File>
     <File Include="Views/Elections/Vote.cshtml">
-      <publishTime>01/22/2017 18:22:07</publishTime>
+      <publishTime>01/26/2017 01:40:17</publishTime>
+    </File>
+    <File Include="Views/Elections/_DetailsInLine.cshtml">
+      <publishTime>02/05/2017 16:03:05</publishTime>
+    </File>
+    <File Include="Views/Elections/_DetailsLessInLine.cshtml">
+      <publishTime>02/05/2017 16:03:20</publishTime>
     </File>
     <File Include="Views/Elections/_EditElectionInfo.cshtml">
-      <publishTime>01/22/2017 18:54:37</publishTime>
+      <publishTime>02/03/2017 11:56:06</publishTime>
     </File>
     <File Include="Views/Elections/_ElectionAfterEdit.cshtml">
-      <publishTime>01/22/2017 18:54:02</publishTime>
+      <publishTime>02/05/2017 16:03:39</publishTime>
     </File>
     <File Include="Views/Elections/_ElectionInfo.cshtml">
-      <publishTime>01/22/2017 18:57:08</publishTime>
+      <publishTime>02/04/2017 14:43:28</publishTime>
     </File>
     <File Include="Views/Elections/_SearchAndAddCandidate.cshtml">
       <publishTime>01/22/2017 18:49:15</publishTime>
@@ -412,7 +424,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/04/2017 16:27:00</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>01/20/2017 13:30:22</publishTime>
+      <publishTime>01/28/2017 01:43:30</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>12/07/2016 14:17:02</publishTime>
@@ -421,10 +433,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/06/2016 20:47:34</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>01/20/2017 13:22:15</publishTime>
+      <publishTime>01/25/2017 01:21:15</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
-      <publishTime>01/21/2017 17:19:44</publishTime>
+      <publishTime>01/25/2017 01:57:07</publishTime>
     </File>
     <File Include="Views/States/Create.cshtml">
       <publishTime>12/29/2016 19:25:31</publishTime>
@@ -454,7 +466,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/20/2017 18:49:25</publishTime>
     </File>
     <File Include="Views/Users/Index.cshtml">
-      <publishTime>01/12/2017 15:52:55</publishTime>
+      <publishTime>02/05/2017 20:55:09</publishTime>
     </File>
     <File Include="Views/Users/MySettings.cshtml">
       <publishTime>01/20/2017 17:56:35</publishTime>
@@ -463,13 +475,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/02/2017 18:59:45</publishTime>
     </File>
     <File Include="Views/Web.config">
-      <publishTime>12/06/2016 20:47:19</publishTime>
+      <publishTime>01/28/2017 15:01:35</publishTime>
     </File>
     <File Include="Views/_ViewStart.cshtml">
       <publishTime>01/01/2017 16:09:01</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/22/2017 19:54:02</publishTime>
+      <publishTime>02/05/2017 22:45:33</publishTime>
     </File>
   </ItemGroup>
 </Project>

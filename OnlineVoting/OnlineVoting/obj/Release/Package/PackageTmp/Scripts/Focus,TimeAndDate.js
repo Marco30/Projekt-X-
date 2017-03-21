@@ -37,7 +37,7 @@ var DateAndTime =
 
 
 
-            if ($(window).width() < 960)// kontrollerar hur stor bildskärm man har
+            if ($(window).width() < 900)// kontrollerar hur stor bildskärm man har
             {
                 //kontrolerare om det fin text i en div med vis id 
                 if ($('#Success1').text().trim().length) {
@@ -50,9 +50,32 @@ var DateAndTime =
                     $("#SuccessSmal").hide();
                 }, sec * 1000);
 
+          //fixar menyn i elcetion view när det är mobil CSS
+               
+                $('.btn.btn-default').find('#knapptext').attr('id', 'knapptextV');
+                $('.btn.btn-info').find('#knapptext').attr('id', 'knapptextB');
+                //$('.btn.btn-info').find('#knapptextCandidate').attr('id', 'knapptextCandidateSmal');
+
+                /* gör så texten i CSS mini knapparna bara blir 6 bokstäver*/
+                /*var strB = $("#knapptextB").text();
+               // $("#knapptextB").html(strB.substring(0, 6));
+                var strV = $("#knapptextV").text();
+                //$("#knapptextV").html(strV.substring(0, 6));
+
+                $('.btn.btn-info').find('#knapptextB').html(strB.substring(0, 6));
+                if (strV === 'Admin Off') {
+                    $('.btn.btn-default').find('#knapptextV').html(strV.substring(0, 6));
+                }*/
+
                 //alert('Less than 960');
             }
             else {
+
+                //fixar menyn i elcetion view när det är vanlig dator CSS
+                /*$('.knapptextCandidateSmal').addClass('knapptextCandidate').removeClass('knapptextCandidateSmal');
+                $('.btn.btn-default').find('.knapptextV').addClass('knapptext').removeClass('knapptextV');
+                $('.btn.btn-info').find('.knapptextB').addClass('knapptext').removeClass('knapptextB');*/
+
                 //kontrolerare om det fin text i en div med vis id 
                 if ($('#Success1').text().trim().length) {
                     $('#Success1').attr('id', 'Success');
@@ -69,7 +92,7 @@ var DateAndTime =
 
 
 
-            if ($(window).width() < 960)// kontrollerar hur stor bildskärm man har
+            if ($(window).width() < 900)// kontrollerar hur stor bildskärm man har
             {
                 //hittar om en div med ett vist id har text inuti 
                 if ($('#Error1').text().trim().length) {

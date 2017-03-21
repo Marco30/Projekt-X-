@@ -1,0 +1,20 @@
+﻿@model List<OnlineVoting.Models.FGSModel>
+@{
+    ViewBag.Title = "FGSEdit";
+}
+
+    <h2>FGSEdit</h2>
+    @using (Html.BeginForm("FGSEditXML", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+
+
+            @Html.EditorForModel()
+         
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-info" />
+            </div>
+        </div>
+    }

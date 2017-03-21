@@ -29,6 +29,7 @@ namespace OnlineVoting.Models.Repository
         void UpdateCandidate(Candidate candidate);
         void AddCandidate(Candidate candidate);
         Candidate GetCandidateByElectionIdAndUserId(int ElectionID, int UserId);
+        List<Candidate> GetListOfAllElectionsOneCandidateIsIn(int UserId);
 
         List<ElectionRankView> ShowResultsOfElectionById(int ElectionID);
         Election GetElectionByIdNoTracking(int ElectionId);

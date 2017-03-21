@@ -14,7 +14,9 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using System.Xml.Schema;
 using OnlineVoting.Models.Repository;
+using System.Xml;
 
 namespace OnlineVoting.Controllers
 {
@@ -23,11 +25,11 @@ namespace OnlineVoting.Controllers
     {
 
         private IUserRepository _userRepository;
-
+        private IElectionRepository _electionRepository;
         public UsersController()
         {
             _userRepository = new UserRepository();
-
+            _electionRepository = new ElectionRepository();
         }
 
         [Authorize(Roles = "Admin")]
@@ -54,9 +56,221 @@ namespace OnlineVoting.Controllers
             return RedirectToAction("Index", "Users");
         }
 
+        //-------------------------test ändra XML fil
+
+        public ActionResult TransformXML()// sändrar XML fil
+        {
+
+            XDocument XMLfil = XDocument.Load(@"D:\valkod\Marco 2\OnlineVoting\OnlineVoting\Content\METS.66f54119-c80e-4bdf-b3c3-76a625a91400.xml");
+
+            XNamespace mets = "http://www.loc.gov/METS/";
+
+            var docs1 = XMLfil.Descendants(mets + "dmdSec")
+               .Select(x => new {
+                   //title = x.Element(dc + "title").Value,
+                   ID = x.Attribute("ID").Value,
+               })
+               .ToList();
+
+
+            XNamespace dcterms = "http://purl.org/dc/terms/";
+            XNamespace dc = "http://purl.org/dc/elements/1.1/";
+
+            var docs = XMLfil.Descendants(dcterms + "dublincore")
+               .Select(x => new {
+                   title = x.Element(dc + "title").Value,
+                   subject = x.Element(dc + "subject").Value,
+                   description = x.Element(dc + "description").Value,
+                   creator = x.Element(dc + "creator").Value,
+                   date = x.Element(dc + "date").Value
+               })
+               .ToList();
+
+            TempData["Message"] = "XML file has " + docs + " " + docs1;
+
+            return RedirectToAction("Index", "Users");
+        }
+
+        public ActionResult ValidationXML()// sändrar XML fil
+        {
+            var FGSModel = new List<FGSModel>();
+
+            XmlSchemaSet schema = new XmlSchemaSet();
+            schema.Add("http://www.loc.gov/METS/", @"http://xml.ra.se/e-arkiv/METS/CSPackageMETS.xsd");
+
+            XDocument XMLfil = XDocument.Load(@"D:\valkod\Marco 2\OnlineVoting\OnlineVoting\Content\METS.66f54119-c80e-4bdf-b3c3-76a625a91400.xml", LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+
+            Boolean result = false;
+
+            int ID = 0; 
+
+            XMLfil.Validate(schema, (sender, e) =>
+            {
+                //TempData["Message"] = TempData["Message"] + " XML file error " + e.Message;
+
+                IXmlLineInfo info = sender as IXmlLineInfo;
+
+                XElement reader = ((XElement)sender);
+
+                var XMLNode = reader.Name.ToString();
+                XMLNode = XMLNode.Replace("{", "");
+                XMLNode = XMLNode.Replace("}", ":");
+
+                var XMLattribute = reader.FirstAttribute.ToString();
+
+
+                //-----------------model test---------------
+
+                var NewAttribute = FilterWords(e.Message);
+
+                FGSModel.Add(new FGSModel
+                {
+                    FGSId = ID++,
+                    Node = XMLNode,
+                    NewAttribute = NewAttribute,
+                    Attribute = XMLattribute,
+                    Message = info.LineNumber.ToString(),
+                });
+                //----------------------------------
+
+                //string Message = string.Format("{0}: {1} Node: {2} - Attribute: {3} - Line: {4}", e.Severity, e.Message, XMLNode, XMLattribute, info != null ? info.LineNumber.ToString() : "not known");
+
+                //TempData["Message"] = TempData["Message"] + Message;
+
+                result = true;
+            });
+
+            if(result)
+            {
+                Console.WriteLine("Validation Failed");
+            }
+            else
+            {
+                Console.WriteLine("Validation succeeded");
+            }
+
+
+            //TempData["Message"] = "XML file has been created with all the users" + docs + " " + docs1;
+
+            return RedirectToAction("index", "Users");
+        }
+
+        static string FilterWords(string str)
+        {
+            var ListOfWorlds = str.Split(' ').Where(w => w == w.ToUpper());
+
+            var upperCaseWord = "";
+
+            foreach (string s in ListOfWorlds)
+            {
+                upperCaseWord = s;
+            }
+
+                return upperCaseWord;
+
+        }
+
+        public ActionResult FGSEdit()// hämtar lista på alla användare som finns på DB
+        {
+
+            var FGSModel = new List<FGSModel>();
+
+            XmlSchemaSet schema = new XmlSchemaSet();
+            schema.Add("http://www.loc.gov/METS/", @"http://xml.ra.se/e-arkiv/METS/CSPackageMETS.xsd");
+
+            XDocument XMLfil = XDocument.Load(@"D:\valkod\Marco 2\OnlineVoting\OnlineVoting\Content\METS.66f54119-c80e-4bdf-b3c3-76a625a91400.xml", LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
+
+            Boolean result = false;
+
+            int ID = 0;
+
+            XMLfil.Validate(schema, (sender, e) =>
+            {
+                //TempData["Message"] = TempData["Message"] + " XML file error " + e.Message;
+
+                IXmlLineInfo info = sender as IXmlLineInfo;
+
+                XElement reader = ((XElement)sender);
+
+                var XMLNode = reader.Name.ToString();
+                XMLNode = XMLNode.Replace("{", "");
+                XMLNode = XMLNode.Replace("}", ":");
+
+                var XMLattribute = reader.FirstAttribute.ToString();
+
+
+                //-----------------model test---------------
+
+                var NewAttribute = FilterWords(e.Message);
+
+                FGSModel.Add(new FGSModel
+                {
+                    FGSId = ID++,
+                    Node = XMLNode,
+                    NewAttribute = NewAttribute,
+                    Attribute = XMLattribute,
+                    Line = info.LineNumber.ToString(),
+                    Message = e.Message,
+                });
+                //----------------------------------
+
+                //string Message = string.Format("{0}: {1} Node: {2} - Attribute: {3} - Line: {4}", e.Severity, e.Message, XMLNode, XMLattribute, info != null ? info.LineNumber.ToString() : "not known");
+
+                //TempData["Message"] = TempData["Message"] + Message;
+
+                result = true;
+            });
+
+            if (result)
+            {
+                Console.WriteLine("Validation Failed");
+            }
+            else
+            {
+                Console.WriteLine("Validation succeeded");
+            }
+
+            return View(FGSModel);
+        }
+
+        [HttpPost]
+        public ActionResult FGSEditXML(List<FGSModel> FGS)// hämtar lista på alla användare som finns på DB
+        {
+            var test = FGS;
+            return View(FGS);
+        }
+
+        public ActionResult AddToXML()// sändrar XML fil
+        {
+
+            XDocument XMLfil = XDocument.Load(@"D:\valkod\Marco 2\OnlineVoting\OnlineVoting\Content\METS.66f54119-c80e-4bdf-b3c3-76a625a91400.xml");
+
+            XNamespace mets = "http://www.loc.gov/METS/";
+
+
+            XMLfil.Element(mets + "mets").Add(new XAttribute("OBJID", "UUID:4129e475-4572-415d-a8aa-2424b7fdd16e"), new XAttribute("TYPE", "ERMS"), new XAttribute("PROFILE", "http://www.loc.gov/standards/mets/version18/mets.xsd"));// TYPE måste var minst 4 täcken
+
+            XMLfil.Save(@"D:\valkod\Marco 2\OnlineVoting\OnlineVoting\Content\SIP.xml");
+
+            /* var docs1 = XMLfil.Descendants(mets + "mets")
+                .Select(x => new {
+                    //title = x.Element(dc + "title").Value,
+                    OBJID = x.Attribute("OBJID").Value,
+                    TYPE = x.Attribute("TYPE").Value,
+                    PROFILE = x.Attribute("PROFILE").Value,
+                })
+                .ToList();
+
+             TempData["Message"] = "XML file has " + docs1;*/
+
+
+
+            return RedirectToAction("Index", "Users");
+        }
+
+        //------------------------------------------
 
         [Authorize(Roles = "User")]
-
         public ActionResult MySettings()// visar view med användare info för att kunna ändra den
         {
 
@@ -359,7 +573,7 @@ namespace OnlineVoting.Controllers
             return RedirectToAction("Index");
         }
 
-   
+
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)// används för att kuna ändra användares info
         {
@@ -445,7 +659,60 @@ namespace OnlineVoting.Controllers
             return RedirectToAction("Index");
         }
 
- 
+        //----------------testar ny delit funkntion------------------------------
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult UserDeleteEnabled(int? id)// visar view där man kan ta bort valet 
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            User user = _userRepository.GetUserByUserId(id.GetValueOrDefault());
+
+
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            user.DeleteEnabled = true;
+
+            _userRepository.Update(user);
+
+            _userRepository.Delete(user);// tar bort från ASP.net user DB
+
+            _userRepository.Save();
+
+
+            //---- aktiverarer Delete i candidate DB
+
+            var candidate = _electionRepository.GetListOfAllElectionsOneCandidateIsIn(id.GetValueOrDefault());
+
+            if (candidate != null)
+            {
+
+                for (var i = 0; i < candidate.Count; i++)//loopar alla val en kandidat varit med om och aktiverare delitare användaren 
+                {
+
+
+                    candidate[i].DeleteEnabled = true;
+
+                    _electionRepository.UpdateCandidate(candidate[i]);
+
+
+
+                }
+
+                _electionRepository.Save();
+
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        //-----------------------------------------------------------------------
 
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)// hämtar anvädnare som ska tas bort

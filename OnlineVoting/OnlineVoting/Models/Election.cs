@@ -27,13 +27,13 @@ namespace OnlineVoting.Models
         public string Remarks { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        [Display(Name = "DateTime Start")]
+        [Display(Name = "Starts")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime DateTimeStart { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
-        [Display(Name = "DateTime End")]
+        [Display(Name = "Ends")]
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm tt}", ApplyFormatInEditMode = true)]
         public DateTime DateTimeEnd { get; set; }
@@ -54,6 +54,8 @@ namespace OnlineVoting.Models
 
         [Display(Name = "Winner")]
         public int CandidateWinId { get; set; }
+
+        public bool DeleteEnabled { get; set; }
 
         public virtual State State { get; set; }
 

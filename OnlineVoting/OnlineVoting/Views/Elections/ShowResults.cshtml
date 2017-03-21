@@ -49,6 +49,12 @@ else
 
         @foreach (var item in Model)
         {
+
+            @*if(item.Removed == true) // använde för att 
+            {
+
+            }
+            else { *@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Candidate)
@@ -58,6 +64,7 @@ else
                 </td>
 
             </tr>
+            @*}*@
         }
 
     </table>

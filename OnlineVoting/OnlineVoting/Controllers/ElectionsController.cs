@@ -79,7 +79,7 @@ namespace OnlineVoting.Controllers
                 TempData["Message"] = "There are no candidates in this election (" + election.Description + ")";
                 return Redirect(ControllerContext.HttpContext.Request.UrlReferrer.T‌​oString());
             }
-           
+
         }
 
 
@@ -151,7 +151,7 @@ namespace OnlineVoting.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPost]
-        public ActionResult ResultsIndexSearch(String SearchText)// gör sökning på val namn i index view och ger resultatet 
+        public ActionResult ResultsIndexSearch(String SearchText)// gör sökning på val namn i result view och ger resultatet 
         {
             List<Election> ElectionList;
 
@@ -201,7 +201,7 @@ namespace OnlineVoting.Controllers
         }
 
 
-        public JsonResult GetElectionResultsSearch(String term)// funktion som används av autocomplete jquery i index view för sökning på val namn  
+        public JsonResult GetElectionResultsSearch(String term)// funktion som används av autocomplete jquery i result view för sökning på val namn  
         {
             List<String> ElectionList;// skapar lista som kommer användas för att spara alla User från DB
 
@@ -590,13 +590,13 @@ namespace OnlineVoting.Controllers
 
             ViewBag.empty = false;
 
-                if (votings.Count == 0)
-                {
-                    ViewBag.empty = true;
-                }
-   
+            if (votings.Count == 0)
+            {
+                ViewBag.empty = true;
+            }
 
-                return View(votings);
+
+            return View(votings);
         }
 
 
@@ -645,9 +645,13 @@ namespace OnlineVoting.Controllers
                 {
                     RemoveID.Add(i);
                 }
-                else if (candidate != null)//om canditaten redan fins i valet startat fi statsen som kommer spara index för att sen ta bort den användaren från user listan på Users som kan lägas till i valet 
+                else if (candidate != null)//om canditaten redan fins i valet startat if statsen som kommer spara index för att sen ta bort den användaren från user listan på Users som kan lägas till i valet 
                 {
-                    RemoveID.Add(i);
+                    if (candidate.DeleteEnabled == false)// ska kola om användare är add eller deleted fron val 
+                    {
+                        RemoveID.Add(i);
+                    }
+
                 }
             }
 
@@ -718,7 +722,7 @@ namespace OnlineVoting.Controllers
             }
 
 
-            ViewBag.VotingId = id.ToString();
+            ViewBag.ElectionId = id.ToString();
 
             return PartialView("_SearchAndAddCandidate", UsersList);
 
@@ -760,7 +764,7 @@ namespace OnlineVoting.Controllers
 
 
 
-            if (candidate != null)// användas för att kontrollera att användare inte läger till samma användare två gånger
+            if (candidate != null && candidate.DeleteEnabled == false)// användas för att kontrollera att användare inte läger till samma användare två gånger
             {
 
                 TempData["Message"] = "(" + UserFullName + ") is already a candidate in this election";
@@ -769,22 +773,34 @@ namespace OnlineVoting.Controllers
 
 
             }
-
-            candidate = new Candidate
+            else if (candidate != null && candidate.DeleteEnabled == true)
             {
-                UserId = UserID,
-                ElectionId = ElectionId,
-            };
+                candidate.DeleteEnabled = false;
+                _electionRepository.UpdateCandidate(candidate);
 
-            _electionRepository.AddCandidate(candidate);
+                _electionRepository.Save();
 
-            _electionRepository.Save();
+                TempData["Message"] = "(" + UserFullName + ") is add to this election";
+
+                return Json(new { url = Url.Action("Details", new { id = ElectionId }) });
+            }
+            else
+            {
+                candidate = new Candidate
+                {
+                    UserId = UserID,
+                    ElectionId = ElectionId,
+                };
+
+                _electionRepository.AddCandidate(candidate);
+
+                _electionRepository.Save();
 
 
-            TempData["Message"] = "(" + UserFullName + ") is add to this election";
+                TempData["Message"] = "(" + UserFullName + ") is add to this election";
 
-            return Json(new { url = Url.Action("Details", new { id = ElectionId }) });
-
+                return Json(new { url = Url.Action("Details", new { id = ElectionId }) });
+            }
 
         }
 
@@ -796,14 +812,21 @@ namespace OnlineVoting.Controllers
         {
             var candidate = _electionRepository.GetCandidateById(id);
 
-
             if (candidate != null)
             {
-                _electionRepository.DeleteCandidate(candidate);
+                candidate.DeleteEnabled = true;
+                _electionRepository.UpdateCandidate(candidate);
 
                 _electionRepository.Save();
-
             }
+
+            /* if (candidate != null)
+             {
+                 _electionRepository.DeleteCandidate(candidate);
+
+                 _electionRepository.Save();
+
+             }*/
 
             return RedirectToAction(string.Format("Details/{0}", candidate.ElectionId));
         }
@@ -1148,9 +1171,6 @@ namespace OnlineVoting.Controllers
                     ElectionId = voting.ElectionId,
                 };
 
-
-
-
                 ViewBag.StateDescripcion = state.Descripcion;
 
                 return View(view);
@@ -1162,7 +1182,136 @@ namespace OnlineVoting.Controllers
             }
         }
 
+        //-------testar in line details
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult GetDetailsInLine(int? id)// visar detaljerad info in line med hjälp av ajax
+        {
+
+            List<Election> ElectionList;
+
+            var views = new List<ElectionIndexView>();
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+
+            ElectionList = _electionRepository.GetListOfAllElectionsById(id.GetValueOrDefault());
+
+            if (ElectionList == null)
+            {
+                return HttpNotFound();
+            }
+
+            try
+            {
+
+
+                foreach (var Election in ElectionList)
+                {
+                    User user = null;
+                    if (Election.CandidateWinId != 0)
+                    {
+                        user = _userRepository.GetUserByUserId(Election.CandidateWinId);
+
+                    }
+
+                    views.Add(new ElectionIndexView
+                    {
+                        CandidateWinId = Election.CandidateWinId,
+                        DateTimeEnd = Election.DateTimeEnd,
+                        DateTimeStart = Election.DateTimeStart,
+                        Description = Election.Description,
+                        IsEnableBlankVote = Election.IsEnableBlankVote,
+                        IsForAllUsers = Election.IsForAllUsers,
+                        QuantityBlankVotes = Election.QuantityBlankVotes,
+                        QuantityVotes = Election.QuantityVotes,
+                        Remarks = Election.Remarks,
+                        StateId = Election.StateId,
+                        State = Election.State,
+                        ElectionId = Election.ElectionId,
+                        Winner = user,
+
+                    });
+                }
+
+
+
+                return PartialView("_DetailsInLine", views);
+            }
+            catch
+            {
+                TempData["Message"] = "Error when trying to retrieve in line details for election(" + ElectionList[0].Description + ")";
+                return RedirectToAction("Index");
+            }
+        }
+
+        public ActionResult GetLessDetailsInLine(int? id)// visar mindre detaljerad info in line med hjälp av ajax
+        {
+
+            List<Election> ElectionList;
+
+            var views = new List<ElectionIndexView>();
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+
+            ElectionList = _electionRepository.GetListOfAllElectionsById(id.GetValueOrDefault());
+
+            if (ElectionList == null)
+            {
+                return HttpNotFound();
+            }
+
+            try
+            {
+
+
+                foreach (var Election in ElectionList)
+                {
+                    User user = null;
+                    if (Election.CandidateWinId != 0)
+                    {
+                        user = _userRepository.GetUserByUserId(Election.CandidateWinId);
+
+                    }
+
+                    views.Add(new ElectionIndexView
+                    {
+                        CandidateWinId = Election.CandidateWinId,
+                        DateTimeEnd = Election.DateTimeEnd,
+                        DateTimeStart = Election.DateTimeStart,
+                        Description = Election.Description,
+                        IsEnableBlankVote = Election.IsEnableBlankVote,
+                        IsForAllUsers = Election.IsForAllUsers,
+                        QuantityBlankVotes = Election.QuantityBlankVotes,
+                        QuantityVotes = Election.QuantityVotes,
+                        Remarks = Election.Remarks,
+                        StateId = Election.StateId,
+                        State = Election.State,
+                        ElectionId = Election.ElectionId,
+                        Winner = user,
+
+                    });
+                }
+
+
+
+                return PartialView("_DetailsLessInLine", views);
+            }
+            catch
+            {
+                TempData["Message"] = "Error when trying to retrieve in line details for election(" + ElectionList[0].Description + ")";
+                return RedirectToAction("Index");
+            }
+        }
+
+        //--------------------------
 
         [Authorize(Roles = "Admin")]
         public ActionResult Create()// visar view där man skapar valet 
@@ -1318,7 +1467,7 @@ namespace OnlineVoting.Controllers
                     TimeSpan timeOfStart = view.TimeStart.TimeOfDay;// kommer användas för att längre ner slå ihop tid och datume 
 
                     //DateTime
-                    var voting = new Election
+                    var Election = new Election
                     {
 
 
@@ -1336,7 +1485,7 @@ namespace OnlineVoting.Controllers
 
                     };
 
-                    _electionRepository.UpdateElection(voting);
+                    _electionRepository.UpdateElection(Election);
                     _electionRepository.Save();
 
                     return RedirectToAction("Details", new { id = view.ElectionId });
@@ -1364,52 +1513,52 @@ namespace OnlineVoting.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var voting = _electionRepository.GetElectionById(id.GetValueOrDefault());
+            var Election = _electionRepository.GetElectionById(id.GetValueOrDefault());
 
 
-            if (voting == null)
+            if (Election == null)
             {
                 return HttpNotFound();
             }
 
-            var state = _stateRepository.GetStateById(voting.StateId);
+            var state = _stateRepository.GetStateById(Election.StateId);
 
 
             if ("Open" == state.Descripcion)// används för att kontrollera om ett val är på gong eller avslutad, är ett val avslutat så ska man inte kunna ändra något i valt, detta är en funktion som lags till för att bevara valets integritet
             {
                 //DateTime
-                var FixTimeStart = voting.DateTimeStart.ToString("HH:mm");//får tiden från datetime objekt 
-                var FixTimeEnd = voting.DateTimeEnd.ToString("HH:mm");// får tiden från datetime objekt 
+                var FixTimeStart = Election.DateTimeStart.ToString("HH:mm");//får tiden från datetime objekt 
+                var FixTimeEnd = Election.DateTimeEnd.ToString("HH:mm");// får tiden från datetime objekt 
 
-                var V1 = _electionRepository.GetElectionByIdNoTracking(voting.ElectionId);
+                var V1 = _electionRepository.GetElectionByIdNoTracking(Election.ElectionId);
 
 
                 var view = new ElectionCreateEditView
                 {
 
-                    CandidateWinId = voting.CandidateWinId,
-                    DateEnd = voting.DateTimeEnd.Date,
-                    DateStart = voting.DateTimeStart.Date,
+                    CandidateWinId = Election.CandidateWinId,
+                    DateEnd = Election.DateTimeEnd.Date,
+                    DateStart = Election.DateTimeStart.Date,
                     TimeStart = DateTime.Parse(FixTimeStart, System.Globalization.CultureInfo.CurrentCulture),// start tid
                     TimeEnd = DateTime.Parse(FixTimeEnd, System.Globalization.CultureInfo.CurrentCulture),//slut tid 
-                    Description = voting.Description,
-                    IsEnabledBlankVote = voting.IsEnableBlankVote,
-                    IsForAllUsers = voting.IsForAllUsers,
+                    Description = Election.Description,
+                    IsEnabledBlankVote = Election.IsEnableBlankVote,
+                    IsForAllUsers = Election.IsForAllUsers,
                     QuantityBlankVotes = V1.QuantityBlankVotes,
                     QuantityVotes = V1.QuantityVotes,
-                    Remarks = voting.Remarks,
-                    StateId = voting.StateId,
-                    ElectionId = voting.ElectionId,
+                    Remarks = Election.Remarks,
+                    StateId = Election.StateId,
+                    ElectionId = Election.ElectionId,
 
                 };
 
-                ViewBag.StateId = new SelectList(_stateRepository.GetStateTb(), "StateId", "Descripcion", voting.StateId);
+                ViewBag.StateId = new SelectList(_stateRepository.GetStateTb(), "StateId", "Descripcion", Election.StateId);
 
                 return PartialView("_EditElectionInfo", view);
             }
             else
             {
-                TempData["Message"] = "You tried to Edit (" + voting.Description + "), This election is finished and can not be edited anymore!";
+                TempData["Message"] = "You tried to Edit (" + Election.Description + "), This election is finished and can not be edited anymore!";
                 return Json(new { url = Url.Action("Index", "Elections") });
             }
 
@@ -1520,6 +1669,33 @@ namespace OnlineVoting.Controllers
 
         }
 
+
+        //-----------------------------------------------------------------------
+
+        //----------------testar ny delit funkntion------------------------------
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult ElectionDeleteEnabled(int? id)// visar view där man kan ta bort valet 
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Election voting = _electionRepository.GetElectionById(id.GetValueOrDefault());
+
+            if (voting == null)
+            {
+                return HttpNotFound();
+            }
+
+            voting.DeleteEnabled = true;
+
+            _electionRepository.UpdateElection(voting);
+            _electionRepository.Save();
+
+            return RedirectToAction("Index");
+        }
 
         //-----------------------------------------------------------------------
 

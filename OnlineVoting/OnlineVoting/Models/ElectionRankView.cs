@@ -26,6 +26,7 @@ namespace OnlineVoting.Models
         [Display(Name = "Number Of Votes")]
         [Required(ErrorMessage = "The field {0} is required")]
         public int QuantityVotes { get; set; }
+        public bool Removed { get; set; }
 
     }
 }

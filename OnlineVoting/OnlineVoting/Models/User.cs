@@ -13,7 +13,7 @@ namespace OnlineVoting.Models
     [Serializable]
     public class User
     {
-        // används på alla paltser i systmet där man ska presentera info om användaren 
+        // används på alla platser i systmet där man ska presentera info om användaren 
         [Key]
         public int UserId { get; set; }
 
@@ -49,6 +49,8 @@ namespace OnlineVoting.Models
         [StringLength(200, ErrorMessage = "The field {0} can contain maximum {1} and minimum {2} characters", MinimumLength = 5)]
         [DataType(DataType.ImageUrl)]
         public String Photo { get; set; }
+
+        public bool DeleteEnabled { get; set; }
 
         [XmlIgnore]
         [JsonIgnore]

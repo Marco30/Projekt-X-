@@ -14,6 +14,8 @@ namespace OnlineVoting.Models.Repository
     {
         private bool _disposed = false;// använda för att se om disposed metoden kallas på 
 
+        private bool DeleteEnabled = false;// anväds för att ta bort alla User som har true i DeleteEnabled tabelen i DB, läger jag det till true visas al dat som tagit bort av admin 
+
         private OnlineVotingContext db = new OnlineVotingContext();//egna teabeler
 
         //user managment ASP.net automat genererade tabeller 
@@ -75,7 +77,7 @@ namespace OnlineVoting.Models.Repository
             try
             {
 
-                var users = db.Users.ToList().OrderBy(i => i.FirstName);
+                var users = db.Users.Where(v => v.DeleteEnabled == DeleteEnabled).ToList().OrderBy(i => i.FirstName);
 
                 var UsersList = new List<User>();
 
@@ -108,7 +110,7 @@ namespace OnlineVoting.Models.Repository
         public User GetUserByUserEmail(string UserEmail)// hämtar användar ut i från email 
         {
             //UserName är email 
-            var user = db.Users.Where(u => u.UserName == UserEmail).FirstOrDefault();
+            var user = db.Users.Where(u => u.UserName == UserEmail & u.DeleteEnabled == DeleteEnabled).FirstOrDefault();
        
             var UserInfo = new UserSettingsView
             {
@@ -135,34 +137,34 @@ namespace OnlineVoting.Models.Repository
         public List<User> GetListOfAllUser()// hämtar användar ut i från ID 
         {
 
-            var userList = db.Users.ToList();
+            var userList = db.Users.Where(u => u.DeleteEnabled == DeleteEnabled).ToList();
 
             return userList;
         }
 
         public List<User> GetListOfAllUserByFirstNameAndLastName(string FirstNameText, string LastNameText)// söker efter förnamn och efternam i DB
         {
-            var usersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText) & x.LastName.StartsWith(LastNameText)).ToList();// söker efter förnamn och efternam man sökt på i DB för att visas i viewn 
+            var usersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText) & x.LastName.StartsWith(LastNameText) & x.DeleteEnabled == DeleteEnabled).ToList();// söker efter förnamn och efternam man sökt på i DB för att visas i viewn 
             return usersList;
         }
 
         public List<User> GetListUserByFirstName(string FirstNameText)// söker efter förnamn i DB
         {
-            var usersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText)).ToList();// söker efter förnamn man sökt på i DB för att visas i viewn  
+            var usersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText) & x.DeleteEnabled == DeleteEnabled).ToList();// söker efter förnamn man sökt på i DB för att visas i viewn  
 
             return usersList;
         }
 
         public List<string> AutocompleteListByFirstNameAndLastName(string FirstNameText, string LastNameText)// användas vid Userindex för att Autocomplete när man ska söka på användare 
         {
-            var UsersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText) & x.LastName.StartsWith(LastNameText)).Select(y => y.FirstName + " " + y.LastName).ToList();// söker efter förnamn och efternam man sökt på i DB för att visas på autocomplete 
+            var UsersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText) & x.LastName.StartsWith(LastNameText) & x.DeleteEnabled == DeleteEnabled).Select(y => y.FirstName + " " + y.LastName).ToList();// söker efter förnamn och efternam man sökt på i DB för att visas på autocomplete 
 
             return UsersList;
         }
 
         public List<string> AutocompleteListByFirstName(string FirstNameText)// användas vid Userindex för att Autocomplete när man ska söka på användare
         {
-            var UsersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText)).Select(y => y.FirstName + " " + y.LastName).ToList();// söker efter förnamnet man sökt på i DB för att visas på autocomplete
+            var UsersList = db.Users.Where(x => x.FirstName.StartsWith(FirstNameText) & x.DeleteEnabled == DeleteEnabled).Select(y => y.FirstName + " " + y.LastName).ToList();// söker efter förnamnet man sökt på i DB för att visas på autocomplete
 
             return UsersList;
         }
@@ -210,14 +212,14 @@ namespace OnlineVoting.Models.Repository
 
         public void Delete(User User)//tar bort kontkat 
         {
-            if (db.Entry(User).State == EntityState.Detached)// kontrolerar om Entity är detached för att attacha den 
+            /*if (db.Entry(User).State == EntityState.Detached)// kontrolerar om Entity är detached för att attacha den 
             {
                 db.Users.Attach(User);// attachar data till DataContext 
-            }
+            }*/
             
 
 
-            db.Users.Remove(User);// kallar på fukntion i EntityFramework som tar bort kontakt
+            //db.Users.Remove(User);// kallar på fukntion i EntityFramework som tar bort kontakt
 
             //blockerare användare från ASP.net DB
             var UserASP = this.GetUserByUserEmailFromASPdb(User.UserName);// usernamn är eamil

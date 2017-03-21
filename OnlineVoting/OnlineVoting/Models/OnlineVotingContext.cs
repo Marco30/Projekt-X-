@@ -32,6 +32,6 @@ namespace OnlineVoting.Models
 
         public DbSet<ElectionVotingDetail> ElectionVotingDetails { get; set; }
 
-
+        public System.Data.Entity.DbSet<OnlineVoting.Models.FGSModel> FGSModels { get; set; }
     }
 }

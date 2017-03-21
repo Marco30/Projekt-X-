@@ -197,6 +197,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HtmlHelpers.cs" />
     <Compile Include="Controllers\StatesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ElectionsController.cs" />
@@ -205,6 +206,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Candidate.cs" />
+    <Compile Include="Models\FGSModel.cs" />
     <Compile Include="Models\MonthsList.cs" />
     <Compile Include="Models\OnlineVotingContext.cs" />
     <Compile Include="Models\ElectionDetailsView.cs" />
@@ -263,6 +265,9 @@
     <Content Include="Content\Images\way4.jpg" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\jquery.timepicker.css" />
+    <Content Include="Content\METS.66f54119-c80e-4bdf-b3c3-76a625a91400.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Content\Photos\MeAndMyself2.png" />
     <Content Include="Content\XML\UserList.xml" />
     <Content Include="favicon.ico" />
@@ -327,7 +332,6 @@
     <Content Include="Views\States\Details.cshtml" />
     <Content Include="Views\States\Delete.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\MySettings.cshtml" />
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
@@ -348,6 +352,12 @@
     <Content Include="Views\Elections\_EditElectionInfo.cshtml" />
     <Content Include="Views\Elections\_ElectionAfterEdit.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
+    <Content Include="Views\Account\RecoverPassword.cshtml" />
+    <Content Include="Views\Elections\_DetailsInLine.cshtml" />
+    <Content Include="Views\Elections\_DetailsLessInLine.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\FGSEdit.cshtml" />
+    <Content Include="Views\Users\EditorTemplates\FGSModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

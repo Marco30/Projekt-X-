@@ -1,0 +1,309 @@
+﻿@model IEnumerable<OnlineVoting.Models.ElectionIndexView>
+@{
+    ViewBag.Title = "Results";
+}
+
+
+<div class="row">
+
+    <table class="table" id="nolineontop">
+        <tr>
+            <th>
+                <div class="col-md-8">
+        
+
+                    <h2>Election Results</h2>
+
+                    <p>
+                        @ViewBag.Message
+                    </p>
+
+                </div>
+
+
+                <div class="col-md-8">
+                    @using (Ajax.BeginForm("ResultsIndexSearch", "Elections", null, new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "POST",
+                UpdateTargetId = "ResultTarget"
+            })) //skickar Id till post funktionen i controller
+            {
+
+                        @Html.TextBox("SearchText", null, new { id = "SearchText" })
+                        <input type="submit" value="Search" class="btn btn-info" />
+
+                    }
+                </div>
+            </th>
+        </tr>
+    </table>
+
+</div>
+
+
+
+
+
+<div class="row">
+
+    @*-------------------------test--------------------------------------*@
+
+
+
+    <div class="col-md-4">
+        <div class="tile-new">
+
+            <span class="a-btn-text">Order Election</span>
+            <span class="a-btn-slide-text">Order election by year or month</span>
+            <span class="a-btn-icon-right"><span></span></span>
+
+            @*<div class="tile-hover" style="background-color:rgba(37, 45, 207, 0.9);">*@
+            <div class="tile-hover">
+
+
+
+                <div class="col-md-6">
+
+
+                    @using (Ajax.BeginForm("ResultsIndexOrderBy", "Votings", null, new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "POST",
+                UpdateTargetId = "ResultTarget"
+            })) //skickar Id till post funktionen i controller
+            {
+                        <table class="table" id="TabelOrder">
+
+
+                            <tr id="hide">
+                                <th>
+                                    Year
+
+                                </th>
+                                <th>
+                                    Month
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div id="YearBox">
+                                        @Html.DropDownList("SelectedYear", "Select")
+                                    </div>
+                                </td>
+                                <td>
+                                    <div id="MonthBox">
+
+                                        @Html.DropDownList("SelectedMonths", "Select")
+
+                                    </div>
+                                </td>
+
+                            <tr>
+                        </table>
+
+                        <input type="submit" value="Order By" class="btn btn-default" />
+                                <hr />
+                    }
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    @*---------------------------------------------------------------*@
+
+    @*<div class="col-md-8">
+            <hr />
+
+            <div class="col-md-6">
+
+
+                @using (Ajax.BeginForm("ResultsIndexOrderBy", "Votings", null, new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "POST",
+                UpdateTargetId = "ResultTarget"
+            })) //skickar Id till post funktionen i controller
+            {
+                    <table class="table" id="TabelOrder">
+                        <tr>
+                            <th colspan="5" scope="colgroup">
+                                Order election by year or month
+                            </th>
+                        </tr>
+
+                        <tr id="hide">
+                            <th>
+                                Year
+
+                            </th>
+                            <th>
+                                Month
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                @Html.DropDownList("SelectedYear", "Select")
+
+                            </td>
+                            <td>
+                                <div id="MonthBox">
+
+                                    @Html.DropDownList("SelectedMonths", "Select")
+
+                                </div>
+                            </td>
+
+                        <tr>
+                    </table>
+
+                    <input type="submit" value="Order By" class="btn btn-info" />
+                    <hr />
+                }
+
+
+            </div>
+
+        </div>*@
+
+
+</div>
+
+@if (ViewBag.empty)
+{
+    <div id="Error2">There are no Results</div>
+}
+
+<div id="ResultTarget">
+
+    <table class="table">
+
+        <tr id="hide">
+            <th>
+                @Html.DisplayNameFor(model => model.State.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTimeStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateTimeEnd)
+            </th>
+
+            @*<th>
+                    @Html.DisplayNameFor(model => model.IsForAllUsers)
+                </th> *@
+
+            <th>
+                @Html.DisplayNameFor(model => model.IsEnableBlankVote)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuantityVotes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuantityBlankVotes)
+            </th>
+            <th>
+                Winner
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTimeStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTimeEnd)
+                </td>
+
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.IsForAllUsers)
+                    </td>*@
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsEnableBlankVote)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityVotes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantityBlankVotes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Winner.FullName)
+                </td>
+                <td>
+                    @Html.ActionLink(
+                "Results",
+                "ShowResults",
+                new { id = item.ElectionId },
+                new { @class = "btn btn-info"})
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        $("#MonthBox").hide();// gömer monadas list rutan
+
+        var url = '@Url.Action("FetchMonthsResults")';//Funktion som körs i VotingController
+
+        // gör så en ruta med månader kommer är man valt år, anars är den dåld
+        $('#SelectedYear').change(function () {
+            $.getJSON(url, { selectedYear: $(this).val() }, function (data) {
+                $("#MonthBox").show("highlight", { color: "#7FAAFF" }, 1000);// får fram månads list rutan
+
+                $("#SelectedMonths").empty();// tömer listan på månader när man ändrar år
+
+                var options = $("#SelectedMonths");
+                $.each(data, function (key, value) {
+                    options.append($("<option></option>").val(value.MonthsID).html(value.Months));// tar i mot jason objekter man får från controllern
+                });
+
+            });
+        });
+
+        // autocomplete som används av sök motorn
+        $(function () {
+
+            $("#SearchText").autocomplete({
+                source: '@Url.Action("GetElectionResultsSearch")'
+            });
+
+        });
+
+
+    </script>
+
+}

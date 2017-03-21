@@ -15,6 +15,8 @@ namespace OnlineVoting.Models.Repository
     {
         private bool _disposed = false;// använda för att se om disposed metoden kallas på 
 
+        private bool DeleteEnabled = false;// anväds för att ta bort alla val som har true i DeleteEnabled tabelen i DB, läger jag det till true visas al dat som tagit bort av admin 
+
         private OnlineVotingContext db = new OnlineVotingContext();//egna teabeler
 
         //user managment ASP.net automat genererade tabeller 
@@ -80,6 +82,14 @@ namespace OnlineVoting.Models.Repository
             return Candidate;
         }
 
+        public List<Candidate> GetListOfAllElectionsOneCandidateIsIn(int UserId)// hämtar alla val en kadidat är i från DB
+        {
+
+            var Candidate = db.Candidates.Where(c => c.UserId == UserId).ToList();
+
+            return Candidate;
+        }
+
         public Candidate GetCandidateById(int ElectionID)// hämtar kandidat ut i från id 
         {
             var Candidate = db.Candidates.Find(ElectionID);
@@ -126,7 +136,7 @@ namespace OnlineVoting.Models.Repository
             var votings = db.Elections
                 .Where(v => v.StateId == state.StateId &&
                 v.DateTimeStart <= DateTime.Now &&
-                v.DateTimeEnd >= DateTime.Now)
+                v.DateTimeEnd >= DateTime.Now && v.DeleteEnabled == DeleteEnabled)
                 .Include(v => v.Candidates)
                 .Include(v => v.State)
                 .ToList();
@@ -150,7 +160,7 @@ namespace OnlineVoting.Models.Repository
 
             //@ from not concatenate
             var sql = @"SELECT  Elections.ElectionId, Elections.Description AS Election, States.Descripcion AS State, 
-                                Users.FirstName + ' ' + Users.LastName AS Candidate, Candidates.QuantityVotes
+                                Users.FirstName + ' ' + Users.LastName AS Candidate, Candidates.QuantityVotes, Candidates.DeleteEnabled AS Removed
                          FROM   Candidates INNER JOIN
                                 Users ON Candidates.UserId = Users.UserId INNER JOIN
                                 Elections ON Candidates.ElectionId = Elections.ElectionId INNER JOIN
@@ -180,7 +190,8 @@ namespace OnlineVoting.Models.Repository
                         var State = reader.GetOrdinal("State");
                         var Candidate = reader.GetOrdinal("Candidate");
                         var QuantityVotest = reader.GetOrdinal("QuantityVotes");
-
+                        var Removed = reader.GetOrdinal("Removed");
+                
 
                         // Så länge som det finns poster att läsa returnerar Read true och läsningen fortsätter.
                         while (reader.Read())
@@ -192,9 +203,9 @@ namespace OnlineVoting.Models.Repository
                                 Electionname = reader.GetString(Electionname),
                                 State = reader.GetString(State),
                                 Candidate = reader.GetString(Candidate),
-                                QuantityVotes = reader.GetInt32(QuantityVotest)
-
-                            });
+                                QuantityVotes = reader.GetInt32(QuantityVotest),
+                                Removed = reader.GetBoolean(Removed)
+                        });
                         }
                     }
 
@@ -211,83 +222,84 @@ namespace OnlineVoting.Models.Repository
 
         public List<Election> GetElectionByStateId(State state)
         {
-            var votings = db.Elections.Where(v => v.StateId == state.StateId).Include(v => v.State).ToList();              
+            var votings = db.Elections.Where(v => v.StateId == state.StateId & v.DeleteEnabled == DeleteEnabled).Include(v => v.State).ToList();              
             return votings;
         }
 
         public List<Election> GetListOfAllElections()
         {
-            var votings = db.Elections.Include(v => v.State).ToList();  
+            //var votings = db.Elections.Include(v => v.State).ToList();  
+            var votings = db.Elections.Where(v => v.DeleteEnabled == DeleteEnabled).Include(v => v.State).ToList();
             return votings;
 
         }
 
         public List<Election> GetElectionByName(string SearchText)// söker val namn man sökt på i DB för att visas i viewn 
         {
-            var votings = db.Elections.Where(x => x.Description.StartsWith(SearchText)).ToList();
+            var votings = db.Elections.Where(x => x.Description.StartsWith(SearchText) & x.DeleteEnabled == DeleteEnabled).ToList();
 
             return votings;
         }
 
         public List<Election> GetElectionByNameAndStateId(string SearchText, State state)
         {
-            var votings = db.Elections.Where(x => x.Description.StartsWith(SearchText) & x.StateId == state.StateId).ToList();
+            var votings = db.Elections.Where(x => x.Description.StartsWith(SearchText) & x.StateId == state.StateId & x.DeleteEnabled == DeleteEnabled).ToList();
 
             return votings;
         }
 
         public List<string> GetElectionByNameForAutocomplete(string SearchText)
         {
-            var ElectionList = db.Elections.Where(x => x.Description.StartsWith(SearchText)).Select(y => y.Description).ToList();
-
+            //var ElectionList = db.Elections.Where(x => x.Description.StartsWith(SearchText)).Select(y => y.Description).ToList();
+            var ElectionList = db.Elections.Where(x => x.Description.StartsWith(SearchText) & x.DeleteEnabled == DeleteEnabled).Select(y => y.Description).ToList();
             return ElectionList;
         }
 
         public List<string> GetElectionByNameAndStateIdForAutocomplete(string SearchText, State state)
         {
-            var votings = db.Elections.Where(x => x.Description.StartsWith(SearchText) & x.StateId == state.StateId).Select(y => y.Description).ToList();
+            var votings = db.Elections.Where(x => x.Description.StartsWith(SearchText) & x.StateId == state.StateId & x.DeleteEnabled == DeleteEnabled).Select(y => y.Description).ToList();
 
             return votings;
         }
 
         public List<Election> GetElectionByYearandMonths(int year, int MonthsNum)
         {
-            var ElectionList = db.Elections.Where(x => x.DateTimeStart.Year == year & x.DateTimeStart.Month == MonthsNum).ToList();
+            var ElectionList = db.Elections.Where(x => x.DateTimeStart.Year == year & x.DateTimeStart.Month == MonthsNum & x.DeleteEnabled == DeleteEnabled).ToList();
 
             return ElectionList;
         }
 
         public List<Election> GetElectionByYear(int year)
         {
-            var ElectionList = db.Elections.Where(x => x.DateTimeStart.Year == year).ToList();
+            var ElectionList = db.Elections.Where(x => x.DateTimeStart.Year == year & x.DeleteEnabled == DeleteEnabled).ToList();
 
             return ElectionList;
         }
 
         public List<Election> GetElectionByMonths(int MonthsNum)
         {
-            var ElectionList = db.Elections.Where(x => x.DateTimeStart.Month == MonthsNum).ToList();
+            var ElectionList = db.Elections.Where(x => x.DateTimeStart.Month == MonthsNum & x.DeleteEnabled == DeleteEnabled).ToList();
 
             return ElectionList;
         }
 
         public List<Election> GetElectionByYearAndStateId(int year, State state)
         {
-            var votings = db.Elections.Where(x => x.DateTimeStart.Year == year & x.StateId == state.StateId).ToList();
+            var votings = db.Elections.Where(x => x.DateTimeStart.Year == year & x.StateId == state.StateId & x.DeleteEnabled == DeleteEnabled).ToList();
                          
             return votings;
         }
 
         public List<Election> GetElectionByMonthsAndStateId(int MonthsNum, State state)
         {
-            var votings = db.Elections.Where(x => x.DateTimeStart.Month == MonthsNum & x.StateId == state.StateId).ToList();
+            var votings = db.Elections.Where(x => x.DateTimeStart.Month == MonthsNum & x.StateId == state.StateId & x.DeleteEnabled == DeleteEnabled).ToList();
 
             return votings;
         }
 
         public List<Election> GetElectionByYearMonthsAndStateId(int year, int MonthsNum, State state)
         {
-            var votings = db.Elections.Where(x => x.DateTimeStart.Year == year & x.DateTimeStart.Month == MonthsNum & x.StateId == state.StateId).ToList();
+            var votings = db.Elections.Where(x => x.DateTimeStart.Year == year & x.DateTimeStart.Month == MonthsNum & x.StateId == state.StateId & x.DeleteEnabled == DeleteEnabled).ToList();
           
             return votings;
         }

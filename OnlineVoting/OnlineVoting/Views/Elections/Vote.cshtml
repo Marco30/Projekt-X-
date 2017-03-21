@@ -105,6 +105,18 @@ else
                 </tr>
                 @for (int i = 0; i < Model.MyCandidate.Count; i++)
                 {
+                    if (Model.MyCandidate[i].User.DeleteEnabled == true)// används för att inte visa bortagna användare
+                    {
+
+
+                    }
+                    else if (Model.MyCandidate[i].DeleteEnabled == true)// används för att inte visa bortagna användare
+                    {
+
+
+                    }
+                    else
+                    {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => Model.MyCandidate[i].User.FullName)
@@ -118,21 +130,22 @@ else
                         </td>
                         <td>
                             @Html.ActionLink(
-                                "Vote",
-                                "VoteForCandidate",
-                                new
-                                {
-                                    candidateId = Model.MyCandidate[i].CandidateId,
-                                    ElectionId = Model.ElectionId
-                                },
+                                 "Vote",
+                                 "VoteForCandidate",
+                                 new
+                                 {
+                                     candidateId = Model.MyCandidate[i].CandidateId,
+                                     ElectionId = Model.ElectionId
+                                 },
 
-                             new
-                             {
-                                 @class = "btn btn-info",
-                                 onclick = "return confirm('Are you sure to vote for this candidate?');"
-                             })
+                              new
+                              {
+                                  @class = "btn btn-info",
+                                  onclick = "return confirm('Are you sure to vote for this candidate?');"
+                              })
                         </td>
                     </tr>
+                    }
                 }
             </table>
         }

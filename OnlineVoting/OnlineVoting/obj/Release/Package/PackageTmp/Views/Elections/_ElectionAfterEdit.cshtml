@@ -33,11 +33,12 @@
 
                     <div class="col-md-2">
 
-                        <b> @Html.DisplayNameFor(model => model.Remarks)</b>
+                        <b id="description-lable"> @Html.DisplayNameFor(model => model.Remarks)</b>
                         <br>
-                        <div id="text1">
+                        <div id="description">
                             @Html.DisplayFor(modelItem => item.Remarks)
                         </div>
+
                     </div>
                     <div class="col-md-1">
 
@@ -95,7 +96,7 @@
                     </div>
 
                     <div class="col-md-1">
-                        @Ajax.ActionLink("Edit On", "_EditElectionInfoOnline", new { id = item.ElectionId }, new AjaxOptions
+                      @*  @Ajax.ActionLink("Edit On", "_EditElectionInfoOnline", new { id = item.ElectionId }, new AjaxOptions
                    {
                        HttpMethod = "POST",
                        InsertionMode = InsertionMode.Replace,
@@ -107,7 +108,34 @@
                         @Html.ActionLink("Results", "ShowResults", new { id = item.ElectionId }, new { @class = "btn btn-info" })
 
                         @Html.ActionLink("Close", "Close", new { id = item.ElectionId }, new { @class = "btn btn-default", onclick = "return confirm('Are you sure to close this votation?')" })
-                        @Html.ActionLink("Delete", "Delete", new { id = item.ElectionId }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ElectionId }, new { @class = "btn btn-default" })*@
+
+
+                                 @Ajax.ActionLinkWithSpanAndText("", "_EditElectionInfoOnline", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default" }, new { @class = "glyphicon glyphicon-pencil" }, "Edit", new { @id = "knapptext"},
+                    new AjaxOptions
+                    {
+                        HttpMethod = "POST",
+                        InsertionMode = InsertionMode.Replace,
+                        OnSuccess = "onSuccess",
+                    })
+
+                        @Html.ActionLinkWithSpanAndText("", "Close", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default", onclick = "return confirm('Are you sure you want to close this Election?')" }, new { @class = "glyphicon glyphicon-folder-close" }, "Close", new { @id = "knapptext" })
+
+                        @Html.ActionLinkWithSpanAndText("", "Details", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-info" }, new { @class = "glyphicon glyphicon-user" }, "Candidate", new { @id = "knapptext" })
+
+                        @Html.ActionLinkWithSpanAndText("", "ShowResults", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-info" }, new { @class = "glyphicon glyphicon-th-list" }, "Result", new { @id = "knapptext" })@* egen HTML Helper *@
+                  
+                        @Html.ActionLinkWithSpanAndText("", "Delete", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default" }, new { @class = "glyphicon glyphicon-trash" }, "Delete", new { @id = "knapptext" })
+
+
+                        @Ajax.ActionLinkWithSpanAndText("", "GetLessDetailsInLine", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default" }, new { @class = "glyphicon glyphicon-info-sign" }, "Detail", new { @id = "knapptext" },
+                    new AjaxOptions
+                    {
+                        HttpMethod = "POST",
+                        InsertionMode = InsertionMode.Replace,
+                        OnSuccess = "LineEdit",
+                    })
+
                     </div>
 
 

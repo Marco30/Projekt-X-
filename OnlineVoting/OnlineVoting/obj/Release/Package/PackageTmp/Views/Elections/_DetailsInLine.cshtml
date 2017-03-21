@@ -1,0 +1,150 @@
+﻿@model IEnumerable<OnlineVoting.Models.ElectionIndexView>
+
+@{
+    ViewBag.Title = "_DetailsInLine";
+
+}
+    <section id="Elections">
+
+        <div class="container-fluid">
+
+            @foreach (var item in Model)
+            {
+                @Html.HiddenFor(model => item.ElectionId)
+                    @*<td>
+                        @Html.HiddenFor(modelItem => item.VotingId)
+                        </td>*@
+                    <div class="col-md-1">
+
+                        <b>@Html.DisplayNameFor(model => model.State.Descripcion):</b>
+                        <br>
+                        <div id="text1">
+                            @Html.DisplayFor(modelItem => item.State.Descripcion)
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+
+                        <b>@Html.DisplayNameFor(model => model.Description):</b>
+                        <br>
+                        <div id="text1">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <b id="description-lable"> @Html.DisplayNameFor(model => model.Remarks)</b>
+                        <br>
+                        <div id="description">
+                            @Html.DisplayFor(modelItem => item.Remarks)
+                        </div>
+
+                    </div>
+                    <div class="col-md-1">
+
+                        <b> @Html.DisplayNameFor(model => model.DateTimeStart)</b>
+                        <br>
+                        <div id="text2">
+                            @Html.DisplayFor(modelItem => item.DateTimeStart)
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-1">
+
+                        <b> @Html.DisplayNameFor(model => model.DateTimeEnd)</b>
+                        <br>
+                        <div id="text2">
+                            @Html.DisplayFor(modelItem => item.DateTimeEnd)
+                        </div>
+                    </div>
+
+                    @* <td>
+                            @Html.DisplayFor(modelItem => item.IsForAllUsers)
+                        </td> *@
+
+                    <div class="col-md-1">
+                        <b>@Html.DisplayNameFor(model => model.IsEnableBlankVote)</b>
+                        <br>
+
+                        <div id="text3">
+                            @Html.DisplayFor(modelItem => item.IsEnableBlankVote)
+                        </div>
+
+                    </div>
+                    <div class="col-md-1">
+                        <b>@Html.DisplayNameFor(model => model.QuantityVotes)</b>
+                        <br>
+                        <div id="text2">
+                            @Html.DisplayFor(modelItem => item.QuantityVotes)
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <b>@Html.DisplayNameFor(model => model.QuantityBlankVotes)</b>
+                        <br>
+                        <div id="text2">
+                            @Html.DisplayFor(modelItem => item.QuantityBlankVotes)
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <b>Winner</b>
+                        <br>
+                        <div id="text1">
+                            @Html.DisplayFor(modelItem => item.Winner.FullName)
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+
+                       @* @Ajax.ActionLink("Edit On", "_EditElectionInfoOnline", new { id = item.ElectionId }, new AjaxOptions
+                   {
+                       HttpMethod = "POST",
+                       InsertionMode = InsertionMode.Replace,
+                       OnSuccess = "onSuccess",
+                   }, new { @class = "btn btn-info" })
+
+
+                        @Html.ActionLink("Add Candidate", "Details", new { id = item.ElectionId }, new { @class = "btn btn-info" })
+                        @Html.ActionLink("Results", "ShowResults", new { id = item.ElectionId }, new { @class = "btn btn-info" })
+
+                        @Html.ActionLink("Close", "Close", new { id = item.ElectionId }, new { @class = "btn btn-default", onclick = "return confirm('Are you sure to close this votation?')" })
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ElectionId }, new { @class = "btn btn-default" })*@
+
+
+                        @Ajax.ActionLinkWithSpanAndText("", "_EditElectionInfoOnline", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default" }, new { @class = "glyphicon glyphicon-pencil" }, "Edit", new { @id = "knapptext" },
+                    new AjaxOptions
+                    {
+                        HttpMethod = "POST",
+                        InsertionMode = InsertionMode.Replace,
+                        OnSuccess = "onSuccess",
+                    })
+
+                        @Html.ActionLinkWithSpanAndText("", "Close", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default", onclick = "return confirm('Are you sure you want to close this Election?')" }, new { @class = "glyphicon glyphicon-folder-close" }, "Close", new { @id = "knapptext" })
+
+                        @Html.ActionLinkWithSpanAndText("", "Details", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-info" }, new { @class = "glyphicon glyphicon-user" }, "Candidate", new { @id = "knapptext" })
+
+                        @Html.ActionLinkWithSpanAndText("", "ShowResults", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-info" }, new { @class = "glyphicon glyphicon-th-list" }, "Result", new { @id = "knapptext" })@* egen HTML Helper *@
+
+                        @Html.ActionLinkWithSpanAndText("", "Delete", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default" }, new { @class = "glyphicon glyphicon-trash" }, "Delete", new { @id = "knapptext" })
+
+                        @Ajax.ActionLinkWithSpanAndText("", "GetLessDetailsInLine", "Elections", new { id = item.ElectionId }, new { @class = "btn btn-default" }, new { @class = "glyphicon glyphicon-info-sign" }, "Detail", new { @id = "knapptext" },
+                    new AjaxOptions
+                    {
+                        HttpMethod = "POST",
+                        InsertionMode = InsertionMode.Replace,
+                        OnSuccess = "LineEdit",
+                    })
+
+                    </div>
+
+
+
+              
+            }
+
+        </div>
+
+
+
+    </section>

@@ -17,18 +17,22 @@
 
 <table class="table" id="UserElections">
     <tr id="hide">
-        <th>
+        
+       @* <th>
             @Html.DisplayNameFor(model => model.State.Descripcion)
-        </th>
+        </th>*@
+
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Remarks)
         </th>
-        <th>
+
+        @*<th>
             @Html.DisplayNameFor(model => model.DateTimeStart)
-        </th>
+        </th>*@
+
         <th>
             @Html.DisplayNameFor(model => model.DateTimeEnd)
         </th>
@@ -37,9 +41,9 @@
                 @Html.DisplayNameFor(model => model.IsForAllUsers)
             </th> *@
 
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.IsEnableBlankVote)
-        </th>
+        </th>*@
 
         <th></th>
     </tr>
@@ -50,18 +54,22 @@
         {
 
             <tr>
-                <td>
+
+                @*<td>
                     @Html.DisplayFor(modelItem => item.State.Descripcion)
-                </td>
+                </td>*@
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Remarks)
                 </td>
-                <td>
+
+                @*<td>
                     @Html.DisplayFor(modelItem => item.DateTimeStart)
-                </td>
+                </td>*@
+
                 <td>
                     @Html.DisplayFor(modelItem => item.DateTimeEnd)
                 </td>
@@ -70,9 +78,9 @@
                         @Html.DisplayFor(modelItem => item.IsForAllUsers)
                     </td> *@
 
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.IsEnableBlankVote)
-                </td>
+                </td>*@
 
                 <td>
                     @Html.ActionLink("Vote", "Vote", new { ElectionId = item.ElectionId }, new { @class = "btn btn-info" })

@@ -1,0 +1,45 @@
+﻿@model OnlineVoting.Models.FGSModel
+
+@{
+    ViewBag.Title = "FGSModel";
+}
+
+    @Html.AntiForgeryToken()
+    
+<div class="row">
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.FGSId)
+
+
+    <div class="col-md-1">
+        @Html.HiddenFor(model => model.Node)
+        @Html.HiddenFor(model => model.Attribute)
+    </div>
+
+    <div class="col-md-1">
+        <b>@Html.DisplayFor(model => model.Line):</b>
+        <div id="text1">
+            @Html.HiddenFor(model => model.Line)
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <b>@Html.DisplayFor(model => model.Message)</b>
+        <div id="text1">
+            @Html.HiddenFor(model => model.Message)
+        </div>
+        <br>
+    </div>
+
+    <div class="col-md-2">
+        <div id="text1">
+            Mata in värdet som @Html.DisplayFor(model => model.NewAttribute) ska få
+            @Html.HiddenFor(model => model.NewAttribute)
+        </div>
+        @Html.EditorFor(model => model.NewAttributeValue)
+        @Html.ValidationMessageFor(model => model.NewAttributeValue, "", new { @class = "text-danger" })
+    </div>
+
+</div>

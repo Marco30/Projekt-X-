@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfUser xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <User>
+    <UserId>15</UserId>
+    <UserName>test34@live.se</UserName>
+    <FirstName>edwin</FirstName>
+    <LastName>test</LastName>
+    <Phone>0706880589</Phone>
+    <Adress>terapivägen 16</Adress>
+    <Photo>~/Content/Photos/marco job.jpg</Photo>
+  </User>
+  <User>
+    <UserId>2</UserId>
+    <UserName>test@live.se</UserName>
+    <FirstName>Edwin</FirstName>
+    <LastName>Villegas</LastName>
+    <Phone>0706880589</Phone>
+    <Adress>dedfdfgdfg</Adress>
+    <Photo>~/Content/Photos/Marco1.png</Photo>
+  </User>
+  <User>
+    <UserId>3</UserId>
+    <UserName>test2@live.se</UserName>
+    <FirstName>erik</FirstName>
+    <LastName>Villegas</LastName>
+    <Phone>0706880589</Phone>
+    <Adress>dedfdfgdfg</Adress>
+    <Photo>~/Content/Photos/GraphicsStore.png</Photo>
+  </User>
+  <User>
+    <UserId>11</UserId>
+    <UserName>test4@live.se</UserName>
+    <FirstName>hava</FirstName>
+    <LastName>villegas</LastName>
+    <Phone>0706880589</Phone>
+    <Adress>stintavägen 23</Adress>
+    <Photo>~/Content/Photos/Marco.jpg</Photo>
+  </User>
+  <User>
+    <UserId>1</UserId>
+    <UserName>Admin@live.se</UserName>
+    <FirstName>Marco</FirstName>
+    <LastName>Villegas</LastName>
+    <Phone>0706880589</Phone>
+    <Adress>Terapivägen 14C</Adress>
+    <Photo>~/Content/Photos/MeAndMyself2.png</Photo>
+  </User>
+  <User>
+    <UserId>5</UserId>
+    <UserName>percyvillegas2020@gmail.com</UserName>
+    <FirstName>Percy</FirstName>
+    <LastName>Tello</LastName>
+    <Phone>0701469056</Phone>
+    <Adress>Terapivägen 16 e</Adress>
+    <Photo>~/Content/Photos/GraphicsStore.png</Photo>
+  </User>
+  <User>
+    <UserId>4</UserId>
+    <UserName>test3@live.se</UserName>
+    <FirstName>sam</FirstName>
+    <LastName>Villegas</LastName>
+    <Phone>0706880589</Phone>
+    <Adress>dedfdfgdfg</Adress>
+    <Photo>~/Content/Photos/marco job.jpg</Photo>
+  </User>
+</ArrayOfUser>

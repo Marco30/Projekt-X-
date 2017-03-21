@@ -114,7 +114,19 @@
                         <th></th>
                     </tr>
                     @for (int i = 0; i < Model.Candidates.Count; i++)
-                {
+                    {
+                        if (Model.Candidates[i].User.DeleteEnabled == true)// används för att inte visa bortagna användare
+                        {
+
+
+                        }
+                        if (Model.Candidates[i].DeleteEnabled == true)// används för att inte visa bortagna användare
+                        {
+
+
+                        }
+                        else
+                        {
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => Model.Candidates[i].User.UserName)
@@ -131,12 +143,13 @@
                             </td>
                             <td>
                                 @Html.ActionLink(
-                                "Delete",
-                                "DeleteCandidate",
-                             new { id = Model.Candidates[i].CandidateId },
-                             new { @class = "btn btn-danger", onclick = "return confirm('Are you sure to delete this candidate?');" })
+                                 "Remove from Election",
+                                 "DeleteCandidate",
+                              new { id = Model.Candidates[i].CandidateId },
+                              new { @class = "btn btn-danger", onclick = "return confirm('Are you sure to delete this candidate?');" })
                             </td>
                         </tr>
+                        }
                     }
                 </table>
             }

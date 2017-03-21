@@ -48,24 +48,6 @@ namespace OnlineVoting.Controllers
         // public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-           /* if (ModelState.IsValid)
-            {
-
-                var user = await _accountRepository.GetUserByEmailAndPassword(model.UserName, model.Password);// hämtar användar från Db genom metod i AccountRepository
-
-      
-                    if (user != null)
-                    {
-                        await SignInAsync(user, model.RememberMe);
-                        return RedirectToLocal(returnUrl);
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Invalid username or password.");
-                    }
-        
-
-            }*/
 
             //----------------- test email validering 
 
@@ -92,7 +74,7 @@ namespace OnlineVoting.Controllers
 
             //-------------------------------------
 
-        
+
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -167,7 +149,26 @@ namespace OnlineVoting.Controllers
                         string Email = userASP.Email;
                         string EmailSubject = "Email confirmation";
 
-                        SendEmail(Email, EmailSubject, TextMessage);
+                        try
+                        {
+                            SendEmail(Email, EmailSubject, TextMessage);
+                        }
+                        catch (Exception ex)// fixar bug med att användar skapades fast email misslyckats att skickas 
+                        {
+
+                            User userDB = _userRepository.GetUserByUserEmail(userASP.Email);
+
+                            User userDelit = _userRepository.GetUserByUserId(userDB.UserId);
+
+                            _userRepository.Delete(userDelit);// tar bort den skapade användaren 
+
+                            _userRepository.Save();//sparat att man tagit bort användaren 
+
+                            ModelState.AddModelError(string.Empty, ex.Message);
+
+                            return View(userView);
+                        }
+
                     }
                     else
                     {
@@ -218,31 +219,31 @@ namespace OnlineVoting.Controllers
             mailMessage.Body = TextMessage;
             mailMessage.IsBodyHtml = true;
 
-            SmtpClient smtp = new SmtpClient("Smtp.live.com", 587);
+            SmtpClient smtp = new SmtpClient("smtp.live.com", 587); // 587 är för lokal bruk men 25 på don webb server
             smtp.Credentials = new NetworkCredential("Marco.villegas@live.se", "darkrign3030");
-            smtp.EnableSsl = true;
+            smtp.EnableSsl =  true;
             smtp.Send(mailMessage);
         }
 
 
         [AllowAnonymous]
-         public ActionResult Confirm(string Email)// visar confirm view
-         {
-             ViewBag.Email = Email;
-            return View();
-         }
-
-         // GET: /Account/ConfirmEmail 
-         [AllowAnonymous]
-         public async Task<ActionResult> ConfirmEmail(string Token, string Email)// används för att bekräfta användare genom email 
+        public ActionResult Confirm(string Email)// visar confirm view
         {
-             ApplicationUser user =  _accountRepository.GetUserByIdInASPdb(Token);
-             //ApplicationUser user = this.UserManager.FindById(Token);
-             if (user != null)
-             {
-                 if (user.Email == Email)
-                 {
-                     user.EmailConfirmed = true;
+            ViewBag.Email = Email;
+            return View();
+        }
+
+        // GET: /Account/ConfirmEmail 
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string Token, string Email)// används för att bekräfta användare genom email 
+        {
+            ApplicationUser user = _accountRepository.GetUserByIdInASPdb(Token);
+            //ApplicationUser user = this.UserManager.FindById(Token);
+            if (user != null)
+            {
+                if (user.Email == Email)
+                {
+                    user.EmailConfirmed = true;
 
                     bool updated = await _accountRepository.Update(user);
 
@@ -250,24 +251,102 @@ namespace OnlineVoting.Controllers
                     {
                         _accountRepository.Save();
                     }
-                     //await UserManager.UpdateAsync(user);
-                     await SignInAsync(user, isPersistent: false);
+                    //await UserManager.UpdateAsync(user);
+                    await SignInAsync(user, isPersistent: false);
 
-                     return RedirectToAction("Index", "Home", new { ConfirmedEmail = user.Email });
-                 }
-                 else
-                 {
-                     return RedirectToAction("Confirm", "Account", new { Email = user.Email });
-                 }
-             }
-             else
-             {
-                 return RedirectToAction("Confirm", "Account", new { Email = "" });
-             }
+                    return RedirectToAction("Index", "Home", new { ConfirmedEmail = user.Email });
+                }
+                else
+                {
+                    return RedirectToAction("Confirm", "Account", new { Email = user.Email });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Confirm", "Account", new { Email = "" });
+            }
 
-         }
+        }
 
         //------------------------------
+
+        //------Lost password------------------------
+
+        [AllowAnonymous]
+        public ActionResult RecoverPassword()// visar confirm view
+        {
+            if (TempData["Message"] != null)
+            {
+                ViewBag.Message = TempData["Message"].ToString();// visar medelande som tagit med fron Edit view
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult RecoverPassword(User user)// visar confirm view
+        {
+            ApplicationUser userASP = _userRepository.GetUserByUserEmailFromASPdb(user.UserName);
+            //ApplicationUser user = this.UserManager.FindById(Token);
+            if (userASP != null)
+            {
+                if (userASP.Email == user.UserName)
+                {
+
+                    string TextMessage = string.Format("{0}, you are trying to reset your password if it is not you then just ignore this email, to reset your password klick on this linke: <BR/> <a href=\"{1}\" title=\"User Email Reset\">{1}</a>", userASP.UserName, Url.Action("SetNewPassword", "Account", new { Token = userASP.Id, Email = userASP.Email }, Request.Url.Scheme));
+                    string Email = userASP.Email;
+                    string EmailSubject = "Password Recovery";
+                    //jätte bra, det kan bli något av detta
+                    SendEmail(Email, EmailSubject, TextMessage);
+
+                    TempData["Message"] = "A email that will help you recover you password has been sent to you!";
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["Message"] = "The user exist but the recovery email does not match users, could be errors in the DB!";
+                    return RedirectToAction("RecoverPassword", "Account");
+                }
+            }
+            else
+            {
+                TempData["Message"] = "The email does not exist!";
+                return RedirectToAction("RecoverPassword", "Account");
+            }
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> SetNewPassword(string Token, string Email)// används för att bekräfta användare genom email 
+        {
+            ApplicationUser user = _accountRepository.GetUserByIdInASPdb(Token);
+            //ApplicationUser user = this.UserManager.FindById(Token);
+            if (user != null)
+            {
+                if (user.Email == Email)
+                {
+                    //await UserManager.UpdateAsync(user);
+                    await SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("Manage", "Account", routeValues: null);// not fel här tita och fixa
+                }
+                else
+                {
+                    TempData["Message"] = "The user exist but the recovery link email does not match users, could be errors in the DB!";
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                TempData["Message"] = "The email does not exist!";
+                return RedirectToAction("Index", "Home");
+            }
+
+        }
+
+        //-------------------------------
+
 
         [AllowAnonymous]
         [ChildActionOnly]

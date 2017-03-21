@@ -34,7 +34,7 @@ namespace OnlineVoting.Models
         [Required(ErrorMessage = "The field {0} is required")]
         [Display(Name = "Time start")]
         [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{0:HH:mm tt}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime TimeStart { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]
@@ -46,7 +46,7 @@ namespace OnlineVoting.Models
         [Required(ErrorMessage = "The field {0} is required")]
         [Display(Name = "Time end")]
         [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{0:HH:mm tt}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime TimeEnd { get; set; }
 
         [Required(ErrorMessage = "The field {0} is required")]

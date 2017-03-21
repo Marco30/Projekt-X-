@@ -18,7 +18,9 @@ namespace OnlineVoting.Models
 
         public int QuantityVotes { get; set; }
 
-        public virtual Election Voting { get; set; }
+        public bool DeleteEnabled { get; set; }
+
+        public virtual Election Election { get; set; }
         public virtual User User { get; set; }
 
         public virtual ICollection<ElectionVotingDetail> ElectionVotingDetails { get; set; }
